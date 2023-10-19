@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Create Product";
+}
+
+<h2>Create</h2>
+
+<form onsubmit="return handleSubmit()" method="post">
+    <span class="text-danger"></span> <br />
+    Product Name: <input type="text" id="name" class="form-control" />
+    <br />
+
+    Category: 
+    <select class="dropdownCate form-control" id="CateName"></select>
+    <br />
+
+    Price: <input type="number" id="price" placeholder="USD" class="form-control" />
+    <br />
+
+    Stock: <input type="number" id="stock" placeholder="From 1 to 500" class="form-control" />
+    <br />
+    
+    <input type="submit" value="Create" class="btn btn-success">
+    <a href="/product" class="btn btn-outline-primary">Back to home</a>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            loadCate()
+        })
+
+        function loadCate() {
+            let html = ''
+            $.ajax({
+                url: "https://localhost:44357/api/categories",
+                type: "GET",
+                contentType: "application/json",
+                success: function(res) {
+                    $.each(res, function (key, item) {
+                        html += '<option value=' + item.categoryId + '>' + item.categoryName + '</option>';
+                    });
+                    $('#CateName').html(html)
+                },
+                error: function(xhr) {
+                    console.log(xhr)
+                }
+            })
+        }
+
+        function handleSubmit() {
+            const obj = {
+                productName: $("#name").val(),
+                unitsInStock: $("#stock").val(),
+                unitPrice: $("#price").val(),
+                categoryId: $("#CateName").val()
+            }
+
+            $.ajax({
+                url: "https://localhost:44357/api/products",
+                type: "POST",
+                data: JSON.stringify(obj),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res)
+                    window.location.href = '/product'
+                },
+                error: function (xhr) {
+                    console.log(xhr)
+                    $('.text-danger').text("can't create")
+                }
+            })
+        }
+    </script>
+}

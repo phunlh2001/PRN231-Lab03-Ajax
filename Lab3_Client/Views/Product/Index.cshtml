@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Product";
+}
+
+<h1>Product</h1>
+
+<p>
+    <a href="/product/create" class="btn btn-primary">
+        Create
+    </a>
+</p>
+
+<table class="table">
+    <thead class="table-dark">
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            showAll()
+        })
+
+        function showAll() {
+            let html = ""
+            $.ajax({
+                url: "https://localhost:44357/api/products",
+                type: "GET",
+                contentType: "application/json",
+                success: function(result) {
+                    $.each(result, function(k, v) {
+                        html += `<tr>
+                                    <td>${v.productId}</td>
+                                    <td>${v.productName}</td>
+                                    <td>${v.category.categoryName}</td>
+                                    <td>$${v.unitPrice}</td>
+                                    <td>${v.unitsInStock}</td>
+
+                                    <td>
+                                        <a href='/product/detail/${v.productId}' class="btn btn-outline-info">
+                                            View
+                                        </a>
+                                        <a href='/product/edit/${v.productId}' class="btn btn-success">
+                                            Edit
+                                        </a>
+                                        <a href='/product/delete/${v.productId}' class="btn btn-danger">
+                                            Delete
+                                        </a>
+                                    </td>
+                                </tr>`
+                    });
+                    html += '</tbody>'
+                    html += '</table>'
+                    $(".table tbody").html(html);
+
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr)
+                }
+            })
+        }
+    </script>
+}

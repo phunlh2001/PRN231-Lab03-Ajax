@@ -1,0 +1,39 @@
+﻿@model BusinessObjects.Data.Product
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<h2>Delete</h2>
+
+<form onsubmit="return handleDelete()" method="post">
+    <span class="text-danger"></span> <br />
+    <input asp-for="ProductId" id="id" type="hidden" />
+    Product Name: <input class="form-control" asp-for="ProductName" readonly/> <br />
+    Category: <input class="form-control" asp-for="Category.CategoryName" readonly/> <br />
+    Price: <input class="form-control" asp-for="UnitPrice" readonly/> <br />
+    Stock: <input class="form-control" asp-for="UnitsInStock" readonly/> <br />
+
+    <input type="submit" value="Delete" class="btn btn-danger">
+    <a href="/product" class="btn btn-outline-primary">Back to home</a>
+</form>
+
+@section Scripts {
+    <script>
+        function handleDelete() {
+            const id = $("#id").val()
+            $.ajax({
+                url: `https://localhost:44357/api/products/${id}`,
+                type: "DELETE",
+                success: function (res) {
+                    console.log(res)
+                    window.location.href = '/product'
+                },
+                error: function (xhr) {
+                    console.log(xhr)
+                    $('.text-danger').text(xhr.responseText)
+                }
+            })
+        }
+    </script>
+}

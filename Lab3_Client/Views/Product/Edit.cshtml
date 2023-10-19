@@ -1,0 +1,49 @@
+﻿@model BusinessObjects.Data.Product
+@{
+    ViewData["Title"] = "Update Product";
+}
+
+<h2>Update</h2>
+
+<form onsubmit="return handleEdit()" method="post">
+    <input type="hidden" asp-for="ProductId" id="id" />
+    Product Name: <input type="text" id="name" class="form-control" asp-for="ProductName" /> <br />
+    Category: <select asp-for="CategoryId" id="category" class ="form-control" asp-items="ViewBag.cate"></select> <br />
+    Price: <input type="number" id="price" class="form-control" asp-for="UnitPrice" /> <br />
+    Stock: <input type="number" id="stock" class="form-control" asp-for="UnitsInStock" /> <br />
+
+    <input type="submit" value="Update" class="btn btn-success">
+    <a href="/product" class="btn btn-outline-primary">Back to home</a>
+</form>
+
+@section Scripts {
+    <script>
+        function handleEdit() {
+            const apiEndpoint = "https://localhost:44357/api/products"
+            const id = $("#id").val()
+            const obj = {
+                productId: id,
+                productName: $("#name").val(),
+                unitsInStock: $("#stock").val(),
+                unitPrice: $("#price").val(),
+                categoryId: $("#category option:selected").val()
+            }
+
+            $.ajax({
+                url: `${apiEndpoint}/${id}`,
+                type: "PUT",
+                data: JSON.stringify(obj),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (res) {
+                    console.log(res)
+                    window.location.href = '/product'
+                },
+                error: function (xhr) {
+                    console.log(xhr)
+                    $('.text-danger').text(xhr.responseText)
+                }
+            })
+        }
+    </script>
+}
