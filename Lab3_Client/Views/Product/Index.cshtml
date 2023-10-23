@@ -26,9 +26,7 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            showAll()
-        })
+        showAll()
 
         function showAll() {
             let html = ""
@@ -58,8 +56,6 @@
                                     </td>
                                 </tr>`
                     });
-                    html += '</tbody>'
-                    html += '</table>'
                     $(".table tbody").html(html);
 
                 },
